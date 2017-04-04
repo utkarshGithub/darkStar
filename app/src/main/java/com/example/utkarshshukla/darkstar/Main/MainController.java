@@ -1,9 +1,15 @@
 package com.example.utkarshshukla.darkstar.Main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.activeandroid.query.Select;
+import com.example.utkarshshukla.darkstar.CustomApplication.AppController;
 import com.example.utkarshshukla.darkstar.DatabaseUtils.MessageTable;
 
 import java.util.ArrayList;
@@ -29,6 +35,24 @@ public class MainController {
         this.chatAdater = chatAdater;
     }
 
+    public void onCreate ( ) {
+        LocalBroadcastManager.getInstance ( mainActivity ).registerReceiver ( mMessageReceiver,
+                new IntentFilter ( "internet_connectivity_check" ) );
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver ( ) {
+        @Override
+        public void onReceive ( Context context, Intent intent ) {
+            if ( AppController.isActivityVisible ( ) ) {
+                onResume ( );
+            }
+        }
+    };
+
+    public void onDestroy ( ) {
+        LocalBroadcastManager.getInstance ( mainActivity ).unregisterReceiver ( mMessageReceiver );
+    }
+
     public void addSentMessagettoList ( ArrayList< ChatMessage > messageList, String messsage, String timeStamp ) {
 
         mainHelper.sendMessage ( messsage, mainActivity, this, timeStamp );
@@ -49,6 +73,7 @@ public class MainController {
     }
 
     public void onResume ( ) {
+        AppController.activityResumed ( );
         new Handler ( Looper.getMainLooper ( ) ).post ( new Runnable ( ) {
             @Override
             public void run ( ) {
@@ -73,5 +98,9 @@ public class MainController {
                 }
             }
         } );
+    }
+
+    public void onPause ( ) {
+        AppController.activityPaused ( );
     }
 }

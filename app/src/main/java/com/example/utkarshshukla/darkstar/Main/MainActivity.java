@@ -33,6 +33,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String TAG = getClass ( ).getName ( );
 
     @Override
+    protected void onPause ( ) {
+        super.onPause ( );
+        mainController.onPause();
+    }
+
+    @Override
+    protected void onDestroy ( ) {
+        super.onDestroy ( );
+        mainController.onDestroy ();
+    }
+
+    @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.activity_main );
@@ -45,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager ( linearLayoutManager );
         recyclerView.setAdapter ( chatAdater );
         mainController = new MainController ( this, new MainHelper ( ), new MainModel ( ), messageList, chatAdater );
+        mainController.onCreate ();
     }
 
     @Override

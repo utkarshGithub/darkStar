@@ -1,6 +1,7 @@
 package com.example.utkarshshukla.darkstar.Main;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Utkarsh Shukla on 04/04/17.
@@ -39,12 +42,21 @@ class ChatAdpter extends RecyclerView.Adapter< ChatAdpter.MessageViewHolder > {
     @Override
     public void onBindViewHolder ( MessageViewHolder holder, int position ) {
         holder.chatMessage.setText ( messageList.get ( position ).message );
-        if (  getItemViewType ( position ) == SEND ) {
+        if ( getItemViewType ( position ) == SEND ) {
             holder.chatLayout.setGravity ( Gravity.RIGHT );
-            holder.chatMessage.setBackgroundResource ( R.drawable.blue_chat_bubble );
+            holder.myview.setVisibility ( View.VISIBLE );
+            holder.status.setText ( messageList.get ( position ).status );
+            Log.e ( TAG, "onBindViewHolder: " + messageList.get ( position ).status );
+            holder.status.setTextColor ( mainActivity.getResources ( ).getColor ( R.color.white ) );
+            holder.chatMessage.setTextColor ( mainActivity.getResources ( ).getColor ( R.color.white ) );
+            holder.chatLayout.setBackgroundResource ( R.drawable.blue_chat_bubble );
         } else {
             holder.chatLayout.setGravity ( Gravity.LEFT );
-            holder.chatMessage.setBackgroundResource ( R.drawable.grey_chat_bubble );
+            holder.status.setText ( "" );
+            holder.myview.setVisibility ( View.GONE );
+            holder.status.setTextColor ( mainActivity.getResources ( ).getColor ( R.color.gray_cutomer_name ) );
+            holder.chatMessage.setTextColor ( mainActivity.getResources ( ).getColor ( R.color.gray_cutomer_name ) );
+            holder.chatLayout.setBackgroundResource ( R.drawable.grey_chat_bubble );
         }
 
     }
@@ -71,6 +83,8 @@ class ChatAdpter extends RecyclerView.Adapter< ChatAdpter.MessageViewHolder > {
         LinearLayout chatLayout;
         @BindView ( R.id.status )
         TextView status;
+        @BindView ( R.id.view )
+        View myview;
 
         public MessageViewHolder ( View itemView ) {
             super ( itemView );
